@@ -137,5 +137,14 @@ namespace NoromaGD
         }
 
         #endregion Node
+
+        #region Vector2
+
+        public static Vector2 Rotate(this Vector2 vector, float angle, bool angleIsDegree = true)
+        {
+            return NoromaMathf.RotateVector(vector, angle, angleIsDegree);
+        }
+
+        #endregion Vector2
     }
 }

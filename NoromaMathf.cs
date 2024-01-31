@@ -29,6 +29,19 @@ namespace NoromaGD
             return current + direction * speed * (float)deltaTime;
         }
 
+        public static Vector2 RotateVector(Vector2 vector, float angle, bool angleIsDegree = true)
+        {
+            if (angleIsDegree) angle = Mathf.DegToRad(angle);
+            return RotateVector(vector, angle);
+        }
+
+        public static Vector2 RotateVector(Vector2 vector, float radian)
+        {
+            float newX = vector.X * Mathf.Cos(radian) - vector.Y * Mathf.Sin(radian);
+            float newY = vector.X * Mathf.Sin(radian) + vector.Y * Mathf.Cos(radian);
+            return new Vector2(newX, newY);
+        }
+
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, double deltaTime, float maxSpeed = Mathf.Inf)
         {
             target = current + DeltaAngle(current, target);
