@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace NoromaGD
@@ -41,6 +42,11 @@ namespace NoromaGD
         }
 
         public static float Sign(this float x)
+        {
+            return Mathf.Sign(x);
+        }
+
+        public static int SignInt(this float x)
         {
             return Mathf.Sign(x);
         }
