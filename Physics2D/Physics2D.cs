@@ -2,12 +2,16 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.XPath;
 
 namespace NoromaGD
 {
     public static class Physics2D
     {
+        private static CircleShape2D _circleShape = new CircleShape2D();
+        private static RectangleShape2D _rectangleShape = new RectangleShape2D();
+
         /// <summary>
         /// IntersectRayのラッパー関数
         /// </summary>
@@ -37,24 +41,75 @@ namespace NoromaGD
             query.HitFromInside = includeInside;
             query.CollideWithBodies = collideWithBodies;
             Dictionary result = space.IntersectRay(query);
-            RaycastHit2D hit = new RaycastHit2D();
+            if (result.Count == 0) return new RaycastHit2D();
+            return result.ToRaycastHit2D();
+        }
 
-            if (result.Count == 0) return hit;
-            Variant outValue;
-            result.TryGetValue("collider", out outValue);
-            hit.Collider = outValue.As<CollisionObject2D>();
-            result.TryGetValue("collider_id", out outValue);
-            hit.ColliderId = outValue.As<uint>();
-            result.TryGetValue("normal", out outValue);
-            hit.Normal = outValue.As<Vector2>();
-            result.TryGetValue("position", out outValue);
-            hit.Position = outValue.As<Vector2>();
-            result.TryGetValue("rid", out outValue);
-            hit.Rid = outValue.AsRid();
-            result.TryGetValue("shape", out outValue);
-            hit.Shape = outValue.As<CollisionShape2D>();
+        public static RaycastHit2D[] ShapeCast(
+            this PhysicsDirectSpaceState2D space,
+            Shape2D shape,
+            Transform2D transform,
+            Vector2 direction,
+            float distance,
+            uint collisionMask = 0xffffffff,
+            bool collideWithAreas = false,
+            bool includeInside = false,
+            bool collideWithBodies = true,
+            int maxResultCount = 32,
+            params Rid[] exclude
+            )
+        {
+            var query = new PhysicsShapeQueryParameters2D()
+            {
+                Transform = transform,
+                CollideWithAreas = collideWithAreas,
+                CollideWithBodies = collideWithBodies,
+                CollisionMask = collisionMask,
+                Exclude = new Array<Rid>(exclude),
+                Shape = shape
+            };
+            Array<Dictionary> result = space.IntersectShape(query, maxResultCount);
+            if (result == null || result.Count == 0) return null;
+            return result.Select(d => d.ToRaycastHit2D()).ToArray();
+        }
 
-            return hit;
+        public static RaycastHit2D[] CircleCast(
+            this PhysicsDirectSpaceState2D space,
+            Vector2 origin,
+            Vector2 direction,
+            float distance,
+            float radius,
+            uint collisionMask = 0xffffffff,
+            bool collideWithAreas = false,
+            bool includeInside = false,
+            bool collideWithBodies = true,
+            int maxResultCount = 32,
+            params Rid[] exclude
+            )
+        {
+            _circleShape.Radius = radius;
+            Transform2D transform = new Transform2D(0, origin);
+            return ShapeCast(space, _circleShape, transform, direction, distance, collisionMask, collideWithAreas, includeInside, collideWithBodies, maxResultCount, exclude);
+        }
+
+        public static RaycastHit2D[] BoxCast(
+            this PhysicsDirectSpaceState2D space,
+            Vector2 origin,
+            Vector2 direction,
+            float distance,
+            Vector2 size,
+            float angleRad = 0,
+            uint collisionMask = 0xffffffff,
+            bool collideWithAreas = false,
+            bool includeInside = false,
+            bool collideWithBodies = true,
+            int maxResultCount = 32,
+            params Rid[] exclude
+            )
+        {
+            _rectangleShape.Size = size;
+            Transform2D transform = new Transform2D(0, origin);
+            return ShapeCast(space, _rectangleShape, transform, direction, distance, collisionMask, collideWithAreas, includeInside, collideWithBodies, maxResultCount, exclude);
         }
 
         /// <summary>
@@ -81,6 +136,26 @@ namespace NoromaGD
             )
         {
             return node.GetWorld2D().DirectSpaceState.Raycast(origin, direction, distance, collisionMask, collideWithAreas, includeInside, collideWithBodies, exclude);
+        }
+
+        public static RaycastHit2D ToRaycastHit2D(this Dictionary result)
+        {
+            RaycastHit2D hit = new RaycastHit2D();
+            if (result.Count == 0) return hit;
+            Variant outValue;
+            result.TryGetValue("collider", out outValue);
+            hit.Collider = outValue.As<CollisionObject2D>();
+            result.TryGetValue("collider_id", out outValue);
+            hit.ColliderId = outValue.As<uint>();
+            result.TryGetValue("normal", out outValue);
+            hit.Normal = outValue.As<Vector2>();
+            result.TryGetValue("position", out outValue);
+            hit.Position = outValue.As<Vector2>();
+            result.TryGetValue("rid", out outValue);
+            hit.Rid = outValue.AsRid();
+            result.TryGetValue("shape", out outValue);
+            hit.Shape = outValue.As<CollisionShape2D>();
+            return hit;
         }
     }
 }
