@@ -2,7 +2,7 @@ using Godot;
 
 namespace NoromaGD
 {
-    public partial class UniNode2D : Node2D
+    public partial class UniCharacterBody2D : CharacterBody2D
     {
         public bool Enabled
         {
@@ -24,9 +24,6 @@ namespace NoromaGD
         { }
 
         public virtual void _Update(double delta)
-        { }
-
-        public virtual void _FixedUpdate(double delta)
         { }
 
         public virtual void _OnEnable()
@@ -89,12 +86,6 @@ namespace NoromaGD
         {
             if (_enabled == false) return;
             _Update(delta);
-        }
-
-        public override void _PhysicsProcess(double delta)
-        {
-            if (_enabled == false) return;
-            _FixedUpdate(delta);
         }
 
         private void OnVisibilityChanged()
