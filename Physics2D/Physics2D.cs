@@ -141,9 +141,9 @@ namespace NoromaGD
             if (result.Count == 0) return hit;
             Variant outValue;
             result.TryGetValue("collider", out outValue);
-            hit.Collider = outValue.As<CollisionObject2D>();
+            hit.Collider = outValue.As<GodotObject>();
             result.TryGetValue("collider_id", out outValue);
-            hit.ColliderId = outValue.As<uint>();
+            hit.ColliderId = outValue.As<int>();
             result.TryGetValue("normal", out outValue);
             hit.Normal = outValue.As<Vector2>();
             result.TryGetValue("position", out outValue);
@@ -151,7 +151,7 @@ namespace NoromaGD
             result.TryGetValue("rid", out outValue);
             hit.Rid = outValue.AsRid();
             result.TryGetValue("shape", out outValue);
-            hit.Shape = outValue.As<CollisionShape2D>();
+            hit.Shape = outValue.As<int>();
             return hit;
         }
     }
