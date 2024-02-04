@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 
 namespace NoromaGD.Inputs
 {
@@ -12,7 +12,7 @@ namespace NoromaGD.Inputs
 
         public string UpAction { get; set; }
 
-        public Vector2 Direction => Input.GetVector(LeftAction, RightAction, DownAction, UpAction);
+        public Vector2 Direction => Input.GetVector(LeftAction, RightAction, UpAction, DownAction);
 
         public GDDirectionInput(string leftAction, string rightAction, string downAction, string upAction)
         {
