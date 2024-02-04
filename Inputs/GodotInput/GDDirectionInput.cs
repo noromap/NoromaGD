@@ -12,14 +12,24 @@ namespace NoromaGD.Inputs
 
         public string UpAction { get; set; }
 
-        public Vector2 Direction => Input.GetVector(LeftAction, RightAction, UpAction, DownAction);
+        public Vector2 Direction
+        {
+            get
+            {
+                if (Normalize) return Input.GetVector(LeftAction, RightAction, UpAction, DownAction);
+                else return new Vector2(Input.GetAxis(LeftAction, RightAction), Input.GetAxis(UpAction, DownAction));
+            }
+        }
 
-        public GDDirectionInput(string leftAction, string rightAction, string downAction, string upAction)
+        public bool Normalize;
+
+        public GDDirectionInput(string leftAction, string rightAction, string downAction, string upAction, bool normalize = true)
         {
             LeftAction = leftAction;
             RightAction = rightAction;
             DownAction = downAction;
             UpAction = upAction;
+            Normalize = normalize;
         }
     }
 }
