@@ -7,7 +7,7 @@ namespace NoromaGD
     {
         #region CollisionShape2D
 
-        public static Rect2 ToRect(this CollisionShape2D collisionShape)
+        public static Rect2 ToGlobalRect(this CollisionShape2D collisionShape)
         {
             var rect = collisionShape.Shape.GetRect();
             rect = new Rect2(rect.Position + collisionShape.GlobalPosition, rect.Size);
@@ -15,6 +15,16 @@ namespace NoromaGD
         }
 
         #endregion CollisionShape2D
+
+        #region ShapeCast2D
+
+        public static GodotObject GetColliderSafe(this ShapeCast2D shape, int index)
+        {
+            if (shape.IsColliding() == false) return null;
+            return shape.GetCollider(index);
+        }
+
+        #endregion ShapeCast2D
 
         #region Rect2
 
