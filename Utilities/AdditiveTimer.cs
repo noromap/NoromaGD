@@ -2,6 +2,9 @@ namespace NoromaGD
 {
     public class AdditiveTimer : TimerBase
     {
+        public AdditiveTimer()
+        { }
+
         public AdditiveTimer(float duration) : base(duration)
         {
         }
