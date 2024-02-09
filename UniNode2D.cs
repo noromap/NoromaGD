@@ -124,5 +124,10 @@ namespace NoromaGD
             SetProcess(_enabled);
             SetPhysicsProcess(_enabled);
         }
+
+        public void Destroy()
+        {
+            QueueFree();
+        }
     }
 }
