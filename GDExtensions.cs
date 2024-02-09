@@ -129,7 +129,7 @@ namespace NoromaGD
             return children;
         }
 
-        private static void GetChildrenByType<T>(this Node node, List<T> children) where T : class
+        public static void GetChildrenByType<T>(this Node node, List<T> children) where T : class
         {
             if (children == null) children = new List<T>();
             int childCount = node.GetChildCount();
@@ -144,6 +144,11 @@ namespace NoromaGD
                     child.GetChildrenByType(children);
                 }
             }
+        }
+
+        public static Node GetRoot(this Node node)
+        {
+            return node.GetTree().Root.GetChild(0);
         }
 
         #endregion Node
