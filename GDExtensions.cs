@@ -82,6 +82,11 @@ namespace NoromaGD
 
         #region Node
 
+        public static T GetSelf<T>(this Node node) where T : class
+        {
+            return node as T;
+        }
+
         public static T GetChildByType<T>(this Node node, bool recursive = true)
             where T : class
         {
